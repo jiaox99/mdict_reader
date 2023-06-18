@@ -76,6 +76,7 @@ class MdictReader {
     var encrypted = _header['Encrypted'] == '2';
     var encrypted_value = _header['Encrypted'];
     var utf8 = _header['Encoding'] == 'UTF-8';
+    var word_term = 0;
     var keyNumBlocks = _readNumber(fin);
     var keyNumEntries = _readNumber(fin);
     if (_version >= 2.0) {
@@ -85,6 +86,7 @@ class MdictReader {
     var keyBlocksLen = _readNumber(fin);
     if (_version >= 2.0) {
       fin.skip(4);
+      word_term = utf8 ? 1 : 2;
     }
     var compSize = List.filled(keyNumBlocks, 0);
     var decompSize = List.filled(keyNumBlocks, 0);
@@ -100,9 +102,11 @@ class MdictReader {
       numEntries[i] = _readNumber(indexDs);
       var firstWordSize = _readShort(indexDs);
       var firstWord = indexDs.readString(length: firstWordSize, utf8: utf8);
+      indexDs.skip(word_term);
       var lastWordSize = _readShort(indexDs);
       var lastWord = indexDs.readString(length: lastWordSize, utf8: utf8);
       print("first: size=$firstWordSize word=$firstWord last: size=$lastWordSize word=$lastWord");
+      indexDs.skip(word_term);
       compSize[i] = _readNumber(indexDs);
       decompSize[i] = _readNumber(indexDs);
     }
@@ -119,7 +123,6 @@ class MdictReader {
         }
         keyList.add(Key(word, offset));
       }
-      break;
     }
     return keyList;
   }
