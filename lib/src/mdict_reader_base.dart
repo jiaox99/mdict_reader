@@ -105,7 +105,7 @@ class MdictReader {
       indexDs.skip(word_term);
       var lastWordSize = _readShort(indexDs);
       var lastWord = indexDs.readString(length: lastWordSize, utf8: utf8);
-      print("first: size=$firstWordSize word=$firstWord last: size=$lastWordSize word=$lastWord");
+      // print("first: size=$firstWordSize word=$firstWord last: size=$lastWordSize word=$lastWord");
       indexDs.skip(word_term);
       compSize[i] = _readNumber(indexDs);
       decompSize[i] = _readNumber(indexDs);
